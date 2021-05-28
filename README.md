@@ -209,7 +209,9 @@ example_X
 
 Let's say for the sake of example that we wanted to add a new feature called `number_odd`, which is `1` when the value of `number` is odd and `0` when the value of `number` is even. (It's not clear why this would be useful, but you can imagine a more realistic example, e.g. a boolean flag related to a purchase threshold that triggers free shipping.)
 
-We don't want to remove `number` and replace it with `number_odd`, we want an entire new feature `number_odd` to be added. Let's make a custom transformer for this purpose:
+We don't want to remove `number` and replace it with `number_odd`, we want an entire new feature `number_odd` to be added.
+
+Let's make a custom transformer for this purpose. Specifically, we'll use a `FunctionTransformer` ([documentation here](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html)). As you might have guessed from the name, a `FunctionTransformer` takes in a function as an argument (similar to the `.apply` dataframe method) and uses that function to transform the data. Unlike just using `.apply`, this transformer has the typical `.fit_transform` interface and can be used just like any other transformer (including being used in a pipeline).
 
 
 ```python
@@ -767,7 +769,7 @@ pipe = Pipeline(
             # StandardScaler, or a composite one like a
             # ColumnTransformer (shown here), a FeatureUnion,
             # or another Pipeline.
-            # Typicaly the last step will be an estimator
+            # Typically the last step will be an estimator
             # (i.e. a model that makes predictions)
             col_transformer
         )
@@ -777,7 +779,7 @@ pipe = Pipeline(
 
 ### `FeatureUnion` Class
 
-A `FeatureUnion` concatenates together the results of multiple different transformers. While `Pipeline` and a `ColumnTransformer` are usually enough to perform basic *data cleaning* forms of preprocessing, it's also helpful to be able to use a `FeatureUnion` for *feature engineering* forms of preprocessing.
+A `FeatureUnion` **concatenates together the results of multiple different transformers**. While `Pipeline` and a `ColumnTransformer` are usually enough to perform basic *data cleaning* forms of preprocessing, it's also helpful to be able to use a `FeatureUnion` for *feature engineering* forms of preprocessing.
 
 Let's use a `FeatureUnion` to add on the `number_odd` feature from before. Because we only want this transformation to apply to the `number` column, we need to wrap it in a `ColumnTransformer` again. Let's call this new one `feature_eng` to indicate what it is doing:
 
@@ -1063,7 +1065,7 @@ def preprocess_data_with_pipeline(X):
     
     transformed_data = pipe.fit_transform(X)
     
-    ### Re-apply labels ###
+    ### Re-apply labels (optional step for readability) ###
     encoder = original_features_encoded.named_transformers_["ohe"]
     category_labels = encoder.categories_[0]
     all_cols = list(category_labels) + ["number", "number_odd"]
