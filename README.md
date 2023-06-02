@@ -105,7 +105,7 @@ example_X
 
 ### Preprocessing Steps without Pipelines
 
-These steps should be a review of preprocessing steps you have learned previously.
+These steps should be a review of preprocessing steps you have learned previously. 
 
 #### One-Hot Encoding Categorical Data
 
